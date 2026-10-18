@@ -1,12 +1,50 @@
 services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: bellfounder-ollama
+    restart: unless-stopped
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"   # optional - handy for `curl localhost:11434` debugging, not needed by bellfounder itself
+    healthcheck:
+      test: ["CMD-SHELL", "ollama list || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    # Uncomment if this host has an NVIDIA GPU + nvidia-container-toolkit -
+    # CPU-only works fine, just slower (see PLAN.md section 5).
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+  # One-shot: pulls the model into the ollama_data volume on first start.
+  # Safe to re-run - `ollama pull` is a no-op if already present. Check
+  # `docker compose logs -f ollama-pull` to watch download progress.
+  ollama-pull:
+    image: curlimages/curl:latest
+    depends_on:
+      ollama:
+        condition: service_healthy
+    restart: "no"
+    entrypoint:
+      - sh
+      - -c
+      - 'curl -sS http://ollama:11434/api/pull -d "{\"name\": \"${BF_MODEL:-qwen2.5:7b}\"}"'
+
   bellfounder:
     build: .
     container_name: bellfounder
     restart: unless-stopped
-    extra_hosts:
-      - "host.docker.internal:host-gateway"   # plain Docker Engine needs this to reach host Ollama
+    depends_on:
+      - ollama
     environment:
-      - OLLAMA_URL=${OLLAMA_URL:-http://host.docker.internal:11434}
+      - OLLAMA_URL=${OLLAMA_URL:-http://ollama:11434}
       - BF_MODEL=${BF_MODEL:-qwen2.5:7b}
       - BF_ROAST_INTERVAL_S=${BF_ROAST_INTERVAL_S:-120}
       - SQ_HOST=${SQ_HOST:-}                       # empty = SQ link disabled
@@ -26,3 +64,4 @@ services:
 
 volumes:
   bellfounder_data:
+  ollama_data:
