@@ -1,0 +1,130 @@
+{
+  "name": "mix-speech",
+  "description": "Default starting curve - taste, not truth. Edit in Settings (PLAN.md section 9).",
+  "bands": [
+    {
+      "freqHz": 20,
+      "db": -23.3
+    },
+    {
+      "freqHz": 25.1,
+      "db": -20.6
+    },
+    {
+      "freqHz": 31.6,
+      "db": -18
+    },
+    {
+      "freqHz": 39.8,
+      "db": -15.3
+    },
+    {
+      "freqHz": 50.1,
+      "db": -12.7
+    },
+    {
+      "freqHz": 63.1,
+      "db": -10
+    },
+    {
+      "freqHz": 79.4,
+      "db": -7.3
+    },
+    {
+      "freqHz": 100,
+      "db": -4.7
+    },
+    {
+      "freqHz": 125.9,
+      "db": -2
+    },
+    {
+      "freqHz": 158.5,
+      "db": 0
+    },
+    {
+      "freqHz": 199.5,
+      "db": 0
+    },
+    {
+      "freqHz": 251.2,
+      "db": 0
+    },
+    {
+      "freqHz": 316.2,
+      "db": 0
+    },
+    {
+      "freqHz": 398.1,
+      "db": 0
+    },
+    {
+      "freqHz": 501.2,
+      "db": 0
+    },
+    {
+      "freqHz": 631,
+      "db": 0
+    },
+    {
+      "freqHz": 794.3,
+      "db": 0
+    },
+    {
+      "freqHz": 1000,
+      "db": 1.5
+    },
+    {
+      "freqHz": 1258.9,
+      "db": 1.5
+    },
+    {
+      "freqHz": 1584.9,
+      "db": 1.5
+    },
+    {
+      "freqHz": 1995.3,
+      "db": 1.5
+    },
+    {
+      "freqHz": 2511.9,
+      "db": 1.5
+    },
+    {
+      "freqHz": 3162.3,
+      "db": 1.5
+    },
+    {
+      "freqHz": 3981.1,
+      "db": 1.5
+    },
+    {
+      "freqHz": 5011.9,
+      "db": 0
+    },
+    {
+      "freqHz": 6309.6,
+      "db": 0
+    },
+    {
+      "freqHz": 7943.3,
+      "db": 0
+    },
+    {
+      "freqHz": 10000,
+      "db": -1.3
+    },
+    {
+      "freqHz": 12589.3,
+      "db": -2.6
+    },
+    {
+      "freqHz": 15848.9,
+      "db": -3.9
+    },
+    {
+      "freqHz": 19952.6,
+      "db": -5.3
+    }
+  ]
+}

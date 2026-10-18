@@ -8,9 +8,16 @@ answer built from real measurements, not guesses.
 Named for the bell foundries that cast bells and then tune them by measuring
 their overtones - the same job, for a mix.
 
-Status: **planning** - nothing below is built yet. Written for the next person
-(human or LLM) to pick up, including what was considered and rejected. Once
-code exists, design decisions move to `ARCHITECTURE.md` and non-obvious bugs to
+Status: **Phase 0-1 scaffolding built, untested on real hardware.** The
+probe page, DSP library (with unit tests), Flask server (with pytest
+tests), Docker/compose setup, and the Mix/Room/Channel/Captures/Settings
+browser UI all exist - see the repo for code. What's still unverified
+because it needs the real Mac + SQ7 + Focusrite: the Phase 0 channel-count
+question (section 2), and therefore whether the Chrome-fallback or
+Firefox-multichannel capture path is the one actually used. Run the Phase
+0 probe next. This document is kept for the design rationale and the
+phased plan; once Phase 0-1 are validated at a real service, move
+non-obvious implementation details to `ARCHITECTURE.md` and bugs to
 `NOTES.md`.
 
 ---

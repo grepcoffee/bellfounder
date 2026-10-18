@@ -1,0 +1,28 @@
+services:
+  bellfounder:
+    build: .
+    container_name: bellfounder
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"   # plain Docker Engine needs this to reach host Ollama
+    environment:
+      - OLLAMA_URL=${OLLAMA_URL:-http://host.docker.internal:11434}
+      - BF_MODEL=${BF_MODEL:-qwen2.5:7b}
+      - BF_ROAST_INTERVAL_S=${BF_ROAST_INTERVAL_S:-120}
+      - SQ_HOST=${SQ_HOST:-}                       # empty = SQ link disabled
+      - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL:-}   # empty = no Slack summary
+    volumes:
+      - bellfounder_data:/data
+    ports:
+      - "8095:8095"
+    mem_limit: 256m
+    cpus: 0.5
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8095/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  bellfounder_data:

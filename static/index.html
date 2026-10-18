@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Bellfounder</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="alert-banner" class="alert-banner"></div>
+
+<header class="app-header">
+  <h1>Bellfounder</h1>
+  <nav class="tabs">
+    <button class="tab-button active" data-tab="mix">Mix</button>
+    <button class="tab-button" data-tab="channel">Channel</button>
+    <button class="tab-button" data-tab="room">Room</button>
+    <button class="tab-button" data-tab="captures">Captures</button>
+    <button class="tab-button" data-tab="settings">Settings</button>
+  </nav>
+  <div class="session-controls">
+    <button id="session-start">Start session</button>
+    <button id="session-end">End session</button>
+    <span id="session-status" class="status-text"></span>
+  </div>
+</header>
+
+<main>
+  <section id="tab-mix" class="tab-panel active">
+    <div class="panel-grid">
+      <div class="panel-card">
+        <h2>Loudness</h2>
+        <div id="mix-lufs"></div>
+        <div id="mix-peak"></div>
+      </div>
+      <div class="panel-card">
+        <h2>Correlation</h2>
+        <div id="mix-correlation"></div>
+      </div>
+      <div class="panel-card">
+        <h2>Mode</h2>
+        <div id="mix-speech-music" class="speech-music"></div>
+      </div>
+    </div>
+    <div class="panel-card">
+      <h2>1/3-octave vs target</h2>
+      <canvas id="mix-spectrum" width="900" height="240"></canvas>
+    </div>
+    <div class="panel-card">
+      <h2>Roast</h2>
+      <button id="roast-now">Roast now</button>
+      <p id="roast-text"></p>
+    </div>
+  </section>
+
+  <section id="tab-channel" class="tab-panel">
+    <div class="panel-card">
+      <label for="channel-picker">Channel:</label>
+      <select id="channel-picker"></select>
+      <button id="capture-channel">Capture</button>
+      <span id="channel-status" class="status-text"></span>
+    </div>
+    <div class="panel-card">
+      <h2>Spectrum vs role target</h2>
+      <canvas id="channel-spectrum" width="900" height="240"></canvas>
+    </div>
+    <div class="panel-card">
+      <h2>Findings</h2>
+      <ul id="channel-findings"></ul>
+    </div>
+    <div class="panel-card">
+      <h2>Ask</h2>
+      <div class="ask-row">
+        <input type="text" id="ask-channel-input" placeholder="Why does this sound boxy?" />
+        <button id="ask-channel">Ask</button>
+      </div>
+      <div id="chat-panel"></div>
+    </div>
+  </section>
+
+  <section id="tab-room" class="tab-panel">
+    <div class="panel-card">
+      <h2>Room spectrum</h2>
+      <canvas id="room-spectrum" width="900" height="240"></canvas>
+    </div>
+    <div class="panel-card">
+      <h2>SPL</h2>
+      <div id="room-spl"></div>
+    </div>
+  </section>
+
+  <section id="tab-captures" class="tab-panel">
+    <div class="panel-card">
+      <button id="captures-refresh">Refresh</button>
+      <ul id="captures-list" class="captures-list"></ul>
+    </div>
+    <div class="panel-card">
+      <h2>Detail</h2>
+      <pre id="captures-detail"></pre>
+    </div>
+  </section>
+
+  <section id="tab-settings" class="tab-panel">
+    <div class="panel-card">
+      <h2>Devices</h2>
+      <button id="settings-refresh-devices">Refresh device list</button>
+      <div class="settings-row">
+        <label for="settings-sq-device">SQ7 (Mix / PAFL)</label>
+        <select id="settings-sq-device"></select>
+      </div>
+      <div class="settings-row">
+        <label for="settings-room-device">Focusrite (Room)</label>
+        <select id="settings-room-device"></select>
+      </div>
+      <div id="capture-status" class="status-text pre-wrap"></div>
+    </div>
+    <div class="panel-card">
+      <h2>Calibration &amp; behaviour</h2>
+      <div class="settings-row">
+        <label for="settings-spl-offset">Room SPL offset (dB)</label>
+        <input type="number" id="settings-spl-offset" step="0.1" />
+      </div>
+      <div class="settings-row">
+        <label for="settings-roast-interval">Roast interval (s)</label>
+        <input type="number" id="settings-roast-interval" step="10" />
+      </div>
+      <div class="settings-row">
+        <label for="settings-tone">Roast tone</label>
+        <input type="text" id="settings-tone" />
+      </div>
+      <div class="settings-row">
+        <label for="settings-speech-music">Speech/music override</label>
+        <select id="settings-speech-music">
+          <option value="">auto</option>
+          <option value="speech">speech</option>
+          <option value="music">music</option>
+        </select>
+      </div>
+      <button id="settings-save">Save</button>
+      <span id="settings-status" class="status-text"></span>
+    </div>
+    <div class="panel-card">
+      <h2>Server</h2>
+      <div>Model: <span id="config-model"></span></div>
+    </div>
+  </section>
+</main>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
