@@ -145,36 +145,56 @@ class App {
     endBtn.disabled = true;
 
     startBtn.addEventListener('click', async () => {
-      const resp = await fetch('/api/sessions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ kind: 'service' }),
-      });
-      const body = await resp.json();
-      this.sessionId = body.id;
-
-      await this._ensureTargetsLoaded();
-      await this.capture.start({
-        sqDeviceId: this.settings.sqDeviceId,
-        roomDeviceId: this.settings.roomDeviceId,
-        sqChannelCountIdeal: this.settings.sqChannelCountIdeal,
-      });
-      this.worker.postMessage({ type: 'setSplOffset', offsetDb: this.settings.splOffsetDb });
-      this.worker.postMessage({ type: 'setManualSpeechMusic', mode: this.settings.manualSpeechMusic });
-
+      // Disable immediately, before any awaits, so an impatient double-click
+      // at the venue can't fire two overlapping sessions/device opens.
       startBtn.disabled = true;
-      endBtn.disabled = false;
-      document.getElementById('session-status').textContent = `Session #${this.sessionId} running.`;
+      const statusEl = document.getElementById('session-status');
+      statusEl.textContent = 'Starting...';
+
+      let createdSessionId = null;
+      try {
+        const resp = await fetch('/api/sessions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ kind: 'service' }),
+        });
+        if (!resp.ok) throw new Error(`server returned ${resp.status}`);
+        const body = await resp.json();
+        createdSessionId = body.id;
+
+        await this._ensureTargetsLoaded();
+        await this.capture.start({
+          sqDeviceId: this.settings.sqDeviceId,
+          roomDeviceId: this.settings.roomDeviceId,
+          sqChannelCountIdeal: this.settings.sqChannelCountIdeal,
+        });
+        this.worker.postMessage({ type: 'setSplOffset', offsetDb: this.settings.splOffsetDb });
+        this.worker.postMessage({ type: 'setManualSpeechMusic', mode: this.settings.manualSpeechMusic });
+
+        this.sessionId = createdSessionId;
+        endBtn.disabled = false;
+        statusEl.textContent = `Session #${this.sessionId} running.`;
+      } catch (err) {
+        // Don't leave an orphaned open session server-side, and don't leave
+        // the operator staring at a stuck button with no explanation.
+        if (createdSessionId) {
+          fetch(`/api/sessions/${createdSessionId}/end`, { method: 'POST' }).catch(() => {});
+        }
+        await this.capture.stop().catch(() => {});
+        this.sessionId = null;
+        startBtn.disabled = false;
+        statusEl.textContent = `Failed to start: ${err.message}`;
+      }
     });
 
     endBtn.addEventListener('click', async () => {
       if (!this.sessionId) return;
+      endBtn.disabled = true;
       await this.capture.stop();
       await fetch(`/api/sessions/${this.sessionId}/end`, { method: 'POST' });
       document.getElementById('session-status').textContent = `Session #${this.sessionId} ended.`;
       this.sessionId = null;
       startBtn.disabled = false;
-      endBtn.disabled = true;
     });
   }
 

@@ -6,16 +6,19 @@ Device usable?
 
 ## Serving it
 
-`getUserMedia` requires a secure context. Easiest options on the Mac:
+`getUserMedia` requires a secure context. The Mac has no dev tools
+installed, so don't rely on `python3 -m http.server` being available -
+instead it's served as part of the main app:
 
-```sh
-cd scripts/probe
-python3 -m http.server 8096
-```
+- **If the `bellfounder` server is already running** (Ubuntu box, via
+  `docker compose up`), this page is at `/probe/` on that same origin -
+  e.g. `https://ubuntu-box:8095/probe/` - and inherits whatever HTTPS/
+  insecure-origin setup you did for the main app (PLAN.md section 6).
+- A copy also lives in this directory (`scripts/probe/`) for reference and
+  for serving some other way if you're testing before the server exists.
 
-Then open `http://localhost:8096` - `localhost` is treated as secure even
-over plain HTTP. If accessing from another machine, use one of the HTTPS
-options in PLAN.md section 6, or the browser's insecure-origin override flag.
+This is the same file served two ways - if you edit one, copy it to the
+other (`static/probe/` is what actually ships).
 
 ## What to check
 

@@ -26,6 +26,14 @@ def index():
     return app.send_static_file("index.html")
 
 
+@app.route("/probe/")
+def probe():
+    # Flask's static serving doesn't resolve directory indexes on its own;
+    # everything else under static/probe/ (probe.js, worklet.js) is served
+    # automatically via static_url_path="".
+    return app.send_static_file("probe/index.html")
+
+
 @app.route("/health")
 def health():
     return jsonify(status="ok")

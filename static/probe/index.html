@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Bellfounder - Phase 0 probe</title>
+<style>
+  body { background: #111; color: #eee; font-family: system-ui, sans-serif; margin: 2rem; }
+  h1 { font-size: 1.3rem; }
+  .row { margin: 0.75rem 0; display: flex; align-items: center; gap: 0.5rem; }
+  select, input, button { font-size: 1rem; padding: 0.3rem 0.5rem; background: #222; color: #eee; border: 1px solid #444; }
+  button { cursor: pointer; }
+  button:disabled { opacity: 0.4; cursor: default; }
+  pre#applied { background: #000; padding: 0.75rem; border: 1px solid #333; max-height: 10rem; overflow: auto; font-size: 0.85rem; }
+  .meter-row { display: flex; align-items: center; gap: 0.5rem; margin: 0.25rem 0; }
+  .meter-label { width: 3rem; font-family: monospace; }
+  .meter-bar { position: relative; flex: 1; height: 1rem; background: #222; border: 1px solid #333; }
+  .meter-fill { position: absolute; left: 0; top: 0; bottom: 0; background: #4a9; }
+  .meter-peak { position: absolute; top: 0; bottom: 0; width: 2px; background: #e55; }
+  .meter-db { width: 8rem; font-family: monospace; font-size: 0.85rem; }
+  #log { font-family: monospace; font-size: 0.8rem; color: #9a9; max-height: 12rem; overflow: auto; margin-top: 1rem; border-top: 1px solid #333; padding-top: 0.5rem; }
+  .hint { color: #999; font-size: 0.85rem; }
+</style>
+</head>
+<body>
+<h1>Bellfounder - Phase 0 probe</h1>
+<p class="hint">
+  Lists audio input devices, opens one with processing forced off, and shows
+  what the browser actually gave you. Run this on the Mac in both Chrome and
+  Firefox against the SQ7 and the Focusrite to answer the channel-count
+  question in PLAN.md section 2. Needs a secure context - serve over
+  localhost/HTTPS, or enable the insecure-origin override flag (PLAN.md
+  section 6).
+</p>
+
+<div class="row">
+  <label for="device">Device:</label>
+  <select id="device"></select>
+  <button id="refresh">Refresh list</button>
+</div>
+
+<div class="row">
+  <label for="channelCount">Requested channelCount:</label>
+  <input id="channelCount" type="number" min="1" max="32" value="2" />
+  <button id="open">Open</button>
+  <button id="close" disabled>Close</button>
+</div>
+
+<h2>Applied constraints</h2>
+<pre id="applied">(not opened)</pre>
+
+<h2>Per-channel meters</h2>
+<div id="meters"></div>
+
+<h2>Log</h2>
+<div id="log"></div>
+
+<script type="module" src="probe.js"></script>
+</body>
+</html>
